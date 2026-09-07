@@ -13,6 +13,7 @@ import {
   Activity,
   Sliders
 } from 'lucide-react';
+import { useBusiness } from '../context/BusinessContext';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
@@ -20,9 +21,18 @@ export default function AiAdvisor() {
   const location = useLocation();
   const navigate = useNavigate();
   const liveData = location.state || {};
+  const business = useBusiness();
 
-  const businessType = liveData?.businessDetails?.businessType || 'Dairy Farming';
-  const score = liveData?.feasibility?.feasibility_score ?? 88.94;
+  // Prefer fresh route state, fall back to saved BusinessContext, then a sensible default
+  const businessType = 
+    liveData?.businessDetails?.businessType || 
+    business?.businessType || 
+    'Dairy Farming';
+
+  const score = 
+    liveData?.feasibility?.feasibility_score ?? 
+    business?.feasibility?.feasibility_score ?? 
+    88.94;
 
   const [messages, setMessages] = useState([
     {
