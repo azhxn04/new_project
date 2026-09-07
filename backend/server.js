@@ -64,7 +64,7 @@ app.post('/api/ai/feasibility', async (req, res) => {
   }
 });
 
-// FIXED & ADDED: AI Business Advisor Endpoint (Gemini API Integration)
+// AI Business Advisor Endpoint (Gemini API Integration, with retry on 503 overload)
 app.post('/api/ai/advisor', async (req, res) => {
   try {
     const { prompt, businessType, feasibilityScore } = req.body;
@@ -85,10 +85,25 @@ app.post('/api/ai/advisor', async (req, res) => {
 The user is planning a ${businessType || 'Micro Enterprise'} business with a current Feasibility Score of ${feasibilityScore || '88.94'}/100.
 Provide clear, practical, and actionable business advice in concise bullet points.`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.6-flash',
-      contents: `${systemInstruction}\n\nUser Question: ${prompt}`,
-    });
+    let response;
+    const maxRetries = 3;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        response = await ai.models.generateContent({
+          model: 'gemini-3.6-flash',
+          contents: `${systemInstruction}\n\nUser Question: ${prompt}`,
+        });
+        break; // success, exit retry loop
+      } catch (err) {
+        const is503 = err.message && err.message.includes('UNAVAILABLE');
+        if (is503 && attempt < maxRetries - 1) {
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1))); // 1s, 2s backoff
+          continue;
+        }
+        throw err;
+      }
+    }
 
     const reply = response.text || "I am ready to assist with your business plan. How can I help you today?";
 
@@ -98,9 +113,9 @@ Provide clear, practical, and actionable business advice in concise bullet point
     });
   } catch (error) {
     console.error('Gemini Advisor Error:', error.message);
-    return res.status(500).json({
+    return res.status(503).json({
       success: false,
-      error: `Gemini API Error: ${error.message}`
+      error: 'The AI advisor is temporarily busy handling many requests. Please try again in a few seconds.'
     });
   }
 });

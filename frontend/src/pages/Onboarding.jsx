@@ -8,6 +8,8 @@ import LocationSelector from '../components/onboarding/LocationSelector';
 import CapitalInput from '../components/onboarding/CapitalInput';
 import Logo from '../components/common/Logo';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+
 const STEPS = [
   { label: 'Business type', icon: Building2 },
   { label: 'Location', icon: MapPin },
@@ -59,7 +61,7 @@ export default function Onboarding() {
       const distance = Number(formData.location?.distance || 5.0);
 
       // 1. Call Node.js Backend -> Python AI Microservice proxy endpoint
-      const aiResponse = await fetch('http://localhost:8000/api/ai/feasibility', {
+      const aiResponse = await fetch(`${API_BASE_URL}/ai/feasibility`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -75,7 +77,7 @@ export default function Onboarding() {
       const aiData = await aiResponse.json();
 
       // 2. Call MoSJE Financial Rules calculation endpoint
-      const financeResponse = await fetch('http://localhost:8000/api/finance/calculate', {
+      const financeResponse = await fetch(`${API_BASE_URL}/finance/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ availableMarginCapital: margin }),
@@ -108,7 +110,7 @@ export default function Onboarding() {
       }
     } catch (err) {
       console.error('Error during live API submission:', err);
-      alert('Unable to connect to backend server on http://localhost:8000.');
+      alert('Unable to connect to the backend server. Please try again in a moment.');
     } finally {
       setLoading(false);
     }

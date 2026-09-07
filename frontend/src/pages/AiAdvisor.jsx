@@ -14,6 +14,8 @@ import {
   Sliders
 } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+
 export default function AiAdvisor() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ export default function AiAdvisor() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/ai/advisor', {
+      const res = await fetch(`${API_BASE_URL}/ai/advisor`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -83,7 +85,7 @@ export default function AiAdvisor() {
       }
     } catch (err) {
       console.error('Network Error:', err);
-      // Fallback in case localhost:8000 is down completely
+      // Fallback in case backend is down completely
       setMessages((prev) => [
         ...prev,
         {
@@ -238,7 +240,7 @@ export default function AiAdvisor() {
                 <h2 className="font-bold text-slate-900 text-sm">VYAPARMITRA Copilot</h2>
                 <span className="px-2 py-0.5 bg-blue-100 text-blue-700 font-mono font-bold text-[9px] rounded">MOSJE SCA 10/90</span>
               </div>
-              <p className="text-[11px] text-blue-600 font-medium">● Connected to Express Backend (:8000)</p>
+              <p className="text-[11px] text-blue-600 font-medium">● Connected to Live Backend</p>
             </div>
           </div>
 
