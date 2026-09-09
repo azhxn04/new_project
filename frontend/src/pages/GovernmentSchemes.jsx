@@ -41,7 +41,6 @@ export default function GovernmentSchemes() {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 12-Month Operational Cash Flow Data for Recharts Chart
   const cashFlowData = [
     { month: 'M1', revenue: 90000, opex: 92000, loan: 18000, cashReserve: 240000 },
     { month: 'M2', revenue: 90000, opex: 92000, loan: 18000, cashReserve: 230000 },
@@ -92,7 +91,6 @@ export default function GovernmentSchemes() {
     }
   ];
 
-  // Filter schemes based on search term (title, authority, description, subsidy)
   const filteredSchemes = SCHEMES_LIST.filter((scheme) => {
     const query = searchTerm.trim().toLowerCase();
     if (!query) return true;
@@ -108,8 +106,7 @@ export default function GovernmentSchemes() {
   return (
     <div className="min-h-screen bg-slate-50 p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* Header & Navigation */}
+
         <div className="flex justify-between items-center">
           <button
             type="button"
@@ -132,7 +129,6 @@ export default function GovernmentSchemes() {
           </p>
         </div>
 
-        {/* 12-Month Operational Cash Flow & Break-Even Chart */}
         <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
@@ -173,7 +169,6 @@ export default function GovernmentSchemes() {
           </div>
         </div>
 
-        {/* Scheme Search & Filter Banner */}
         <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <h3 className="text-lg font-bold text-slate-900">Eligible MoSJE & Startup Schemes Evaluation</h3>
           <div className="relative w-72">
@@ -188,7 +183,6 @@ export default function GovernmentSchemes() {
           </div>
         </div>
 
-        {/* Schemes Cards Grid */}
         {filteredSchemes.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredSchemes.map((scheme) => (
@@ -204,7 +198,6 @@ export default function GovernmentSchemes() {
                   <h3 className="font-extrabold text-slate-900 text-lg mt-1">{scheme.title}</h3>
                   <p className="text-xs text-slate-500 mt-1">{scheme.desc}</p>
 
-                  {/* Sub-Metrics Cards */}
                   <div className="grid grid-cols-3 gap-2 my-4 text-center">
                     <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                       <p className="text-[10px] text-slate-400 uppercase font-semibold">Interest</p>
@@ -253,7 +246,6 @@ export default function GovernmentSchemes() {
           </div>
         )}
 
-        {/* Hyper-Local Rural Strategy Sections */}
         <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
             <Check className="w-5 h-5 text-emerald-600" /> Primary Rural Distribution Channels
@@ -317,7 +309,6 @@ export default function GovernmentSchemes() {
           </div>
         </div>
 
-        {/* Forward Navigation */}
         <div className="flex justify-end">
           <button
             type="button"
