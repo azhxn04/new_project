@@ -71,7 +71,8 @@ export default function GovernmentSchemes() {
         '90% loan funded by Apex Corporation (NSFDC / NBCFDC / NSKFDC) & SCA at 8.0% interest p.a.',
         'Beneficiary contributes only 10% margin capital.',
         'Generous 6-month moratorium period while business establishes production and cash flow.'
-      ]
+      ],
+      portalUrl: 'https://nsfdc.nic.in/'
     },
     {
       id: 'pmegp',
@@ -86,9 +87,23 @@ export default function GovernmentSchemes() {
         'Up to 35% non-refundable government subsidy on project cost in rural areas for special categories.',
         'Project cost up to ₹50 Lakh for manufacturing and ₹20 Lakh for services.',
         'Beneficiary contribution only 5% for SC/ST/OBC/Women in rural areas.'
-      ]
+      ],
+      portalUrl: 'https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp'
     }
   ];
+
+  // Filter schemes based on search term (title, authority, description, subsidy)
+  const filteredSchemes = SCHEMES_LIST.filter((scheme) => {
+    const query = searchTerm.trim().toLowerCase();
+    if (!query) return true;
+    return (
+      scheme.title.toLowerCase().includes(query) ||
+      scheme.authority.toLowerCase().includes(query) ||
+      scheme.desc.toLowerCase().includes(query) ||
+      scheme.subsidy.toLowerCase().includes(query) ||
+      scheme.interest.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 p-6 md:p-10">
@@ -174,58 +189,69 @@ export default function GovernmentSchemes() {
         </div>
 
         {/* Schemes Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SCHEMES_LIST.map((scheme) => (
-            <div key={scheme.id} className="bg-white p-6 rounded-2xl border border-emerald-500 shadow-sm space-y-4 flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-start">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{scheme.authority}</span>
-                  <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-full">
-                    {scheme.match}
-                  </span>
+        {filteredSchemes.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredSchemes.map((scheme) => (
+              <div key={scheme.id} className="bg-white p-6 rounded-2xl border border-emerald-500 shadow-sm space-y-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{scheme.authority}</span>
+                    <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-full">
+                      {scheme.match}
+                    </span>
+                  </div>
+
+                  <h3 className="font-extrabold text-slate-900 text-lg mt-1">{scheme.title}</h3>
+                  <p className="text-xs text-slate-500 mt-1">{scheme.desc}</p>
+
+                  {/* Sub-Metrics Cards */}
+                  <div className="grid grid-cols-3 gap-2 my-4 text-center">
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Interest</p>
+                      <p className="text-xs font-black text-slate-900 mt-0.5">{scheme.interest}</p>
+                    </div>
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Max Loan</p>
+                      <p className="text-xs font-black text-slate-900 mt-0.5">{scheme.maxLoan}</p>
+                    </div>
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Subsidy</p>
+                      <p className="text-xs font-black text-amber-600 mt-0.5">{scheme.subsidy}</p>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-2 text-xs text-slate-600">
+                    {scheme.points.map((pt, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <h3 className="font-extrabold text-slate-900 text-lg mt-1">{scheme.title}</h3>
-                <p className="text-xs text-slate-500 mt-1">{scheme.desc}</p>
+                <div className="pt-3 border-t border-slate-100 flex justify-between items-center">
+                  <button type="button" className="text-xs font-bold text-slate-600 hover:text-blue-600 flex items-center gap-1">
+                    <FileText className="w-3.5 h-3.5" /> Required Documents Checklist
+                  </button>
 
-                {/* Sub-Metrics Cards */}
-                <div className="grid grid-cols-3 gap-2 my-4 text-center">
-                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                    <p className="text-[10px] text-slate-400 uppercase font-semibold">Interest</p>
-                    <p className="text-xs font-black text-slate-900 mt-0.5">{scheme.interest}</p>
-                  </div>
-                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                    <p className="text-[10px] text-slate-400 uppercase font-semibold">Max Loan</p>
-                    <p className="text-xs font-black text-slate-900 mt-0.5">{scheme.maxLoan}</p>
-                  </div>
-                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                    <p className="text-[10px] text-slate-400 uppercase font-semibold">Subsidy</p>
-                    <p className="text-xs font-black text-amber-600 mt-0.5">{scheme.subsidy}</p>
-                  </div>
+                  
+                    href={scheme.portalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 hover:bg-slate-800 transition"
+                  >
+                    SCA Portal <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 </div>
-
-                <ul className="space-y-2 text-xs text-slate-600">
-                  {scheme.points.map((pt, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span>{pt}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-
-              <div className="pt-3 border-t border-slate-100 flex justify-between items-center">
-                <button type="button" className="text-xs font-bold text-slate-600 hover:text-blue-600 flex items-center gap-1">
-                  <FileText className="w-3.5 h-3.5" /> Required Documents Checklist
-                </button>
-
-                <button type="button" className="px-4 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 hover:bg-slate-800 transition">
-                  SCA Portal <ExternalLink className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm text-center">
+            <p className="text-sm text-slate-500">No schemes match "<span className="font-semibold text-slate-700">{searchTerm}</span>". Try a different keyword.</p>
+          </div>
+        )}
 
         {/* Hyper-Local Rural Strategy Sections */}
         <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
