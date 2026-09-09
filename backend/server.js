@@ -41,7 +41,7 @@ app.get('/api/test-db', async (req, res) => {
 // AI Feasibility Proxy Endpoint (Forwards request to Python ML Engine on port 5000)
 app.post('/api/ai/feasibility', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:5000/predict', {
+    const response = await fetch('https://new-project-tyie.onrender.com/predict', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req.body),
